@@ -38,10 +38,9 @@ class Borrower
 end
 
 class Library 
-  attr_reader :name, :books
+  attr_reader:books
 
-  def initialize(name)
-    @name = name
+  def initialize#can remove name
     @books = []
   end
 
@@ -53,14 +52,17 @@ class Library
     @books.each do |library_book|
       if library_book.id == book_id && library_book.status == "available"
         library_book.check_out
-        puts "Hey!"
         return library_book
+      else
+        return nil
       end
     end
   end
 
-  def get_borrower(book_id)
-  end
+  # Notes from class
+  # book = @books[book_id]
+  # book.check_out
+  # return book
 
   def check_in_book(book)
     if book.status == "checked_out"
