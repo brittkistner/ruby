@@ -40,4 +40,21 @@ describe Exercises do
       expect(array).to eq(3)
     end
   end
+  describe '.ex5' do
+    xit 'puts each element of an array' do
+      Exercises.should_receive(:puts).with(/"a"\n"b"\n"c"/)
+      Exercises.ex5([2])
+      # /1\n2\n3/
+    end
+  end
+  describe '.ex6' do
+    it 'updates last item in array to "panda"' do
+      array = Exercises.ex6([1,2,3])
+      expect(array).to eq([1,2,3,"panda"])
+    end
+    it 'updates last item in array to "GODZILLA" if the last item is "panda"' do
+      array = Exercises.ex6([1,2,"panda"])
+      expect(array).to eq([1,2,"GODZILLA"])
+    end
+  end
 end

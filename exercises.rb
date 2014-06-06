@@ -34,7 +34,11 @@ module Exercises
   # Exercise 5
   #  - Iterates through an array and `puts` each element
   def self.ex5(array)
-    # TODO
+    if array.length == 0
+      puts nil
+    else
+      array.each {|x| puts x}
+    end
   end
 
   # Exercise 6
@@ -42,9 +46,13 @@ module Exercises
   #  - If the last item is already 'panda', update
   #    it to 'GODZILLA' instead
   def self.ex6(array)
-    # TODO
+    if array.last != "panda"
+      array << "panda"
+    elsif array.last == "panda"
+      array[-1] = "GODZILLA"
+      return array
+    end
   end
-
   # Exercise 7
   #  - If the string `str` exists in the array,
   #    add `str` to the end of the array
