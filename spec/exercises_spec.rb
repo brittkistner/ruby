@@ -16,6 +16,10 @@ describe Exercises do
       end
     end
   end
-
-
+  describe '.ex1' do
+    it 'returns the number of elements in array' do
+      length = Exercises.ex1([1,2,3])
+      expect(length).to eq(3)
+    end
+  end
 end
