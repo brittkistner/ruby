@@ -2,6 +2,9 @@ require 'rubygems'
 require_relative '../exercises.rb'
 
 describe Exercises do
+
+  # let method?
+
   describe '.ex0' do
     context 'str is wishes' do
       it 'Triples a str' do
@@ -18,8 +21,14 @@ describe Exercises do
   end
   describe '.ex1' do
     it 'returns the number of elements in array' do
-      length = Exercises.ex1([1,2,3])
-      expect(length).to eq(3)
+      array = Exercises.ex1([1,2,3])
+      expect(array).to eq(3)
+    end
+  end
+  describe '.ex1' do
+    it 'returns the second element of array' do
+      array = Exercises.ex2([1,2,3])
+      expect(array).to eq(2)
     end
   end
 end
