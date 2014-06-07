@@ -57,7 +57,12 @@ module Exercises
   #  - If the string `str` exists in the array,
   #    add `str` to the end of the array
   def self.ex7(array, str)
-    # TODO
+    array.each_with_index do |element, index|
+      if element = str
+        array.delete(str)
+      end
+      array << str
+    end
   end
 
   # Exercise 8

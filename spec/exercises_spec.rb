@@ -50,11 +50,23 @@ describe Exercises do
   describe '.ex6' do
     it 'updates last item in array to "panda"' do
       array = Exercises.ex6([1,2,3])
-      expect(array).to eq([1,2,3,"panda"])
+      expect(array).to eq([1,2,3,"panda"]) #should this update to panda or add panda?
     end
-    it 'updates last item in array to "GODZILLA" if the last item is "panda"' do
-      array = Exercises.ex6([1,2,"panda"])
-      expect(array).to eq([1,2,"GODZILLA"])
+   it 'updates last item in array to "GODZILLA" if the last item is "panda"' do
+      array = Exercises.ex6([1,2,3,"panda"])
+      expect(array).to eq([1,2,3,"GODZILLA"])
+    end
+  end
+  describe '.ex7' do
+    it 'if "str" exists in an array, add "str" to the end of the array' do
+      array = Exercises.ex7([1,2,"hello",3], "hello" )
+      expect(array).to eq([1,2,3,"hello"])
+    end
+  end
+  describe '.ex8' do
+    xit 'print the key value pairs of each hash in the array' do
+      array = Exercises.ex8([{:name => "Buddy", :occupation => "Plumber"}, {:name => "Tricia", :ocupation => "CEO"}])
+      expect(array).to eq()
     end
   end
 end
