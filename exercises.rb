@@ -78,8 +78,18 @@ module Exercises
   #    Otherwise, returns `false`
   # Hint: Google for the wikipedia article on leap years
   def self.ex9(time)
-    # TODO
+    if (time % 4 == 0)
+      if (time % 100 == 0)
+         if(time % 400 == 0)
+            return true
+         end
+         return false
+      end
+      return true
+   end
+   return false
   end
+  #add date time
 end
 
 
@@ -96,6 +106,17 @@ class RPS
   #
   # You will be using this class in the following class, which will let players play
   # RPS through the terminal.
+  def initialize(player1,player2)
+  end
+
+  def play(move1, move2)
+    #can play three times
+    #return player1 or player2 as the winner
+    # else returns the game is already over
+
+  end
+
+
 end
 
 

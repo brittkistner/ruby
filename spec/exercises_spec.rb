@@ -41,10 +41,21 @@ describe Exercises do
     end
   end
   describe '.ex5' do
-    xit 'puts each element of an array' do
-      Exercises.should_receive(:puts).with(/"a"\n"b"\n"c"/)
-      Exercises.ex5([2])
-      # /1\n2\n3/
+    # it 'puts each element of an array' do
+    #   Exercises.ex5([1,2,3,4])
+    #   Exercises.should_receive(:puts).and_return("1\n2\n3\n4\n")
+    # end
+    before do #http://stackoverflow.com/questions/17711744/rspec-puts-output-test
+      $stdout = StringIO.new
+    end
+
+    after(:all) do
+      $stdout = STDOUT
+    end
+
+    it "puts each element" do
+      Exercises.ex5([1,2,3,4])
+      expect($stdout.string).to match("1\n2\n3\n4\n")
     end
   end
   describe '.ex6' do
@@ -67,6 +78,16 @@ describe Exercises do
     xit 'print the key value pairs of each hash in the array' do
       array = Exercises.ex8([{:name => "Buddy", :occupation => "Plumber"}, {:name => "Tricia", :ocupation => "CEO"}])
       expect(array).to eq()
+    end
+  end
+  describe '.ex9' do
+    it 'returns true if the given time is in a leap year' do
+      leap_year = Exercises.ex9(2016) #Time.now??
+      expect(leap_year).to eq(true)
+    end
+    it 'returns false if not a leap year' do
+      leap_year = Exercises.ex9(2015)
+      expect(leap_year).to eq(false)
     end
   end
 end
