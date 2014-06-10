@@ -1,29 +1,29 @@
-require 'pry-byebug'
+require 'pry-debugger'
 require "./bar.rb"
 
 
 describe Bar do
 
   before do
-    @bar = Bar.new "The Irish Yodel"
+    @bar = Bar.new("The Irish Yodel")
   end
 
   it "initializes with a name" do
     expect(@bar.name).to eq("The Irish Yodel")
   end
 
-  xit "cannot change its name" do
+  it "cannot change its name" do
     # That would require a lengthy marketing meeting
     expect {
       @bar.name = 'lolcat cave'
     }.to raise_error
   end
 
-  xit "initializes with an empty menu" do
+  it "initializes with an empty menu" do
     expect(@bar.menu_items.count).to eq(0)
   end
 
-  xit "can add menu items" do
+  it "can add menu items" do
     @bar.add_menu_item('Cosmo', 5.40)
     @bar.add_menu_item('Salty Dog', 7.80)
 
@@ -37,37 +37,37 @@ describe Bar do
     expect(item.price).to eq 9.95
   end
 
-  xit "has a default happy hour discount of zero" do
+  it "has a default happy hour discount of zero" do
     expect(@bar.happy_discount).to eq 0
   end
 
-  xit "can set its happy hour discount" do
+  it "can set its happy hour discount" do
     expect { @bar.happy_discount = 0.5 }.to_not raise_error
   end
 
-  xit "only returns a discount when it's happy hour" do
+  it "only returns a discount when it's happy hour" do
     @bar.happy_discount = 0.5
     # HINT: You need to write your own getter
 
     # We are STUBBING `happy_hour?` to return a specified value.
     # Because of this, you don't have to write a happy_hour? method (yet)
-    expect(@bar).to receive(:happy_hour?).and_return(false)
+    allow(@bar).to receive(:happy_hour?).and_return(false) #use on code I own
     expect(@bar.happy_discount).to eq 0
 
-    expect(@bar).to receive(:happy_hour?).and_return(true)
+    allow(@bar).to receive(:happy_hour?).and_return(true)
     expect(@bar.happy_discount).to eq 0.5
 
     # Take 2
     @bar.happy_discount = 0.3
-    expect(@bar).to receive(:happy_hour?).and_return(false)
+    allow(@bar).to receive(:happy_hour?).and_return(false)
     expect(@bar.happy_discount).to eq 0
 
-    expect(@bar).to receive(:happy_hour?).and_return(true)
+    allow(@bar).to receive(:happy_hour?).and_return(true)
     expect(@bar.happy_discount).to eq 0.3
   end
 
   xit "constrains its happy hour discount to between zero and one" do
-    expect(@bar).to receive(:happy_hour?).twice.and_return(true)
+    allow(@bar).to receive(:happy_hour?).twice.and_return(true)
 
     # HINT: You need to write your own setter
     @bar.happy_discount = 2
