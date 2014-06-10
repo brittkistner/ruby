@@ -30,7 +30,7 @@ describe Bar do
     expect(@bar.menu_items.count).to eq(2)
   end
 
-  xit "can retrieve menu items" do
+  it "can retrieve menu items" do
     @bar.add_menu_item('Little Johnny', 9.95)
     item = @bar.menu_items.first
     expect(item.name).to eq 'Little Johnny'
@@ -66,7 +66,7 @@ describe Bar do
     expect(@bar.happy_discount).to eq 0.3
   end
 
-  xit "constrains its happy hour discount to between zero and one" do
+  it "constrains its happy hour discount to between zero and one" do
     allow(@bar).to receive(:happy_hour?).twice.and_return(true)
 
     # HINT: You need to write your own setter
@@ -77,18 +77,32 @@ describe Bar do
     expect(@bar.happy_discount).to eq 0
   end
 
+  it 'returns the price of a drink during happy hour' do
+    @bar.add_menu_item('Cosmo', 5.00)
+    allow(@bar).to receive(:happy_hour?).and_return(true)
+    @bar.happy_discount = 0.5 #why do I need to set to 0.5?
+
+    expect(@bar.get_price('Cosmo')). to eq 2.50
+  end
+
+  xit 'returns the price of a drink during regular hours' do
+    @bar.add_menu_item('Cosmo', 5.00)
+
+    expect(@bar.get_price('Cosmo')). to eq 5.00
+  end
+
 # # # # # # # # # # # # # # # # # # # # # #
   # DO NOT CHANGE SPECS ABOVE THIS LINE #
 # # # # # # # # # # # # # # # # # # # # # #
 
-  describe '#happy_hour?', :pending => true do
-    it "knows when it is happy hour (3:00pm to 4:00pm)" do
-      # TODO: CONTROL TIME
+  describe '#happy_hour?' do
+    xit "knows when it is happy hour (3:00pm to 4:00pm)" do
+      allow(@bar).to receive()
       expect(@bar.happy_hour?).to eq(true)
     end
 
-    it "is not happy hour otherwise" do
-      # TODO: CONTROL TIME
+    xit "is not happy hour otherwise" do
+      allow(@bar).to receive(Time.parse("5:00"))
       expect(@bar.happy_hour?).to eq(false)
     end
   end

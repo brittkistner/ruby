@@ -22,15 +22,14 @@ class Bar
     end
   end
 
-  def happy_discount=(happy_discount) #attr_writer
-    # if @happy_discount > 1
-    #   @happy_discount = 1
-    # elsif @happy_discount < 0
-    #   @happy_discount = 0
-    # else
-    #   @happy_discount
-    # end
-    @happy_discount = happy_discount
+  def happy_discount=(happy_discount = 0.5) #attr_writer
+    if happy_discount > 1
+      @happy_discount = 1
+    elsif happy_discount < 0
+      @happy_discount = 0
+    else
+      @happy_discount = happy_discount
+    end
   end
 
   def happy_hour?
@@ -42,6 +41,22 @@ class Bar
       true
     else
       false
+    end
+  end
+
+  def get_price(drink_name)
+    #stub time?
+    #find the drink name within the menu
+    #check whether hh = true, if true return discounted price
+    # if not hh, return the regular price
+    @menu_items.each do |x|
+      if x.name == drink_name
+        if happy_hour? == true
+          return (x.price) * (1 - @happy_discount)
+        else
+          return price
+        end
+      end
     end
   end
 end
