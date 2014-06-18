@@ -7,7 +7,7 @@ module TM
     puts "Available Commands:"
     puts "--Type 'list' to list all projects"
     puts "--Type 'new NAME' to create a new project"
-    puts "--Type 'add PID NAME PRIORITY_NUMBER DESCRIPTION' to add a task for project id = PID"
+    puts "--Type 'add PID NAME_TASK PRIORITY_NUMBER DESCRIPTION' to add a task for project id = PID"
     puts "--Type 'tasks PID' to show all tasks for project id = PID"
     puts "--Type 'complete PID' to show all complete tasks for project id = PID"
     puts "--Type 'incomplete PID' to show all incomplete tasks for project id = PID"
@@ -57,14 +57,16 @@ module TM
         project.retrieve_completed_tasks
       when 'incomplete'
         pid = Integer(user_input[1])
+        # binding.pry
+
         project = TM::Project.project_list[pid]
         project.retrieve_incomplete_tasks
       when 'task_list'
         TM::Task.task_list.keys.each {|x| puts "TID: #{x}"}
       when 'mark'
         tid = Integer(user_input[1])
-        TM::Task.task_list.keys.each {|x| puts x}
-        x.mark_complete
+        task = TM::Task.task_list[tid]
+        task.mark_complete
         puts "Task #{task.task_id} completed"
       when 'quit'
         break

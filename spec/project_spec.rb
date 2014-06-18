@@ -16,7 +16,7 @@ describe 'TM::Project' do
     end
   end
 
-  describe "#task" do
+  describe "#create_task" do
     it 'new task created' do
       project1 = TM::Project.new("project1")
       expect(project1.tasks.size).to eq(0)
