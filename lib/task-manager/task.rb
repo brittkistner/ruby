@@ -1,20 +1,17 @@
 class TM::Task
 
-  attr_accessor :name, :creation_date, :description, :task_id
-  attr_reader :priority_number, :project_id, :status
+  attr_accessor :complete
+  attr_reader :priority_number, :project_id, :name, :creation_date, :description, :task_id
 
-  @@class_task_id = 0
-  @@task_list = {}
 
-  def initialize(name, p_number,description=nil, project_id)
+  def initialize(id, name, p_number,description=nil, creation_date, project_id)
+    @task_id = self.class.generate_id
     @name = name
-    @status = "incomplete"
-    @creation_date = Time.now
+    @complete = false
+    @creation_date = creation_date
     self.priority_number = p_number #remove @ and change to p_number?
     @description = description
-    @task_id = @@class_task_id += 1
     @project_id = project_id
-    @@task_list[@task_id] = self
   end
 
   def priority_number=(number)
@@ -28,13 +25,15 @@ class TM::Task
   end
 
   def mark_complete
-    if @status == "incomplete"
-      @status = "complete"
+    if @complete == false
+      @complete = true
     end
   end
 
-  def self.task_list
-    @@task_list
+  def self.generate_id
+    tmp = @@id_counter ||= 0
+    @@id_counter +=1
+    tmp
   end
 
 end

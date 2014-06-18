@@ -5,28 +5,28 @@ class TM::Project
   # @@class_id = 0
   # @@project_list = {} #to database
 
-  @@db = PG.connect(host: 'localhost', dbname: 'task-manager')
+  @@db = PG.connect(host: 'localhost', dbname: 'task-manager-db')
 
   attr_reader :name, :db
   attr_accessor :id, :tasks
 
-  def initialize(name)
+  def initialize(id, name)
+    @id = id
     @name = name
-    # @id = self.generate_id //to database
-    # @id = @@class_id +=1
-    @tasks = [] #create in the database
-    @@project_list[@id] = self
   end
 
-  def self.add_project(project)
+  def self.create(name)
     #instead of using an array, I want add_project to add a new project to the projects table of my db
-    result = @@db.exec("INSERT INTO projects (name) VALUES (#{project.name}") RETURNING
+    @@db.exec_params("INSERT INTO projects (name) VALUES ($1) returning id", [name]) do |result|
+      return new(result.getvalue(0,0),name)
+    end
   end
 
   def create_task(name, priority_number, description = nil)
-    task = TM::Task.new(name, priority_number, description, @id)
-    @tasks << task #switch to database
-    task
+    creation_date = Time.now
+    @@db.exec_params("INSERT INTO tasks (name, priority_number, description, creation_date, project_id) VALUES ($1, $2, $3, $4, $5) returning id", [name, priority_number, description, creation_date, @id]) do |result|
+      return TM::Task.new(result.getvalue(0,0),name, priority_number, description, creation_date, @id)
+    end
   end
 
   def project_mark_complete(task_id)
@@ -68,10 +68,13 @@ class TM::Project
       end
     end
     #return task names??
+    sorted
   end
 
-  # def self.project_list(project)
-  #   @@project_list
-  # end
+  def self.get(id) #gets the project we want
+    @@db.exec_params("SELECT name FROM projects WHERE id = $1", [id]) do |result|
+      new(id,result.getvalue(0,0))
+    end
+  end
 end
 

@@ -35,7 +35,7 @@ module TM
         TM::Project.project_list.keys.each {|x| puts "PID: #{x}"}
       when 'new'
         name = user_input[1]
-        new_project = TM::Project.new(name)
+        new_project = TM::Project.create(name)
         puts "Created #{new_project.name} with PID: #{new_project.id}"
       when 'add'
         pid = Integer(user_input[1])
@@ -43,7 +43,7 @@ module TM
         priority_number = Integer(user_input[3])
         description = user_input.length < 5 ? nil : user_input[4]
 
-        project = TM::Project.project_list[pid]
+        project = TM::Project.get(pid)
         new_task = project.create_task(name,priority_number,description)
 
         puts "Created Task #{new_task.task_id}"

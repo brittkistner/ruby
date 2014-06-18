@@ -9,16 +9,15 @@ describe 'TM::Project' do
 
   describe "#initialize" do
     it 'create a name and id' do
-      project1 = TM::Project.new("project1")
+      project1 = TM::Project.new(5, "project1")
       expect(project1.name).to eq("project1")
-      allow(project1).to receive(:id).and_return(1)
-      expect(project1.id).to eq(1)
+      expect(project1.id).to eq(5)
     end
   end
 
   describe "#create_task" do
     it 'new task created' do
-      project1 = TM::Project.new("project1")
+      project1 = TM::Project.new(5,"project1")
       expect(project1.tasks.size).to eq(0)
       project1.create_task("task1", 3)
 
@@ -30,8 +29,8 @@ describe 'TM::Project' do
   end
 
   describe '#mark_complete and #retrieve_completed_tasks' do
-    it 'mark a task as completed by id and return a list of completed tasks' do
-      project1 = TM::Project.new("project1")
+    xit 'mark a task as completed by id and return a list of completed tasks' do
+      project1 = TM::Project.new(5, "project1")
 
       project1.create_task("task1", 3)
       allow(project1.tasks[0]).to receive(:task_id).and_return(1)
@@ -57,8 +56,8 @@ describe 'TM::Project' do
 
 
   describe "#retrieve_incomplete_tasks" do
-    it 'by priority number then creation date' do
-      project1 = TM::Project.new("project1")
+    xit 'by priority number then creation date' do
+      project1 = TM::Project.new(5, "project1")
 
       project1.create_task("task1", 5)
       project1.create_task("task2", 5)
