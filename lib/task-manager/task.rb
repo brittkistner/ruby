@@ -4,12 +4,11 @@ class TM::Task
   attr_reader :priority_number, :project_id, :name, :creation_date, :description, :task_id
 
 
-  def initialize(id, name, p_number,description=nil, creation_date, project_id)
-    @task_id = self.class.generate_id
-    @name = name
-    @complete = false
+  def initialize(id, p_number,description)
+    @task_id = id
+    @complete = complete
     @creation_date = creation_date
-    self.priority_number = p_number #remove @ and change to p_number?
+    self.priority_number = p_number
     @description = description
     @project_id = project_id
   end
@@ -30,10 +29,9 @@ class TM::Task
     end
   end
 
-  def self.generate_id
-    tmp = @@id_counter ||= 0
-    @@id_counter +=1
-    tmp
-  end
-
+  # def self.generate_id
+  #   tmp = @@id_counter ||= 0
+  #   @@id_counter +=1
+  #   tmp
+  # end
 end

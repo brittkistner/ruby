@@ -1,14 +1,13 @@
 require 'spec_helper'
-require 'pry-debugger'
+require 'pry-byebug'
 
 describe 'TM::Project' do
-
   it "exists" do
     expect(TM::Project).to be_a(Class)
   end
 
   describe "#initialize" do
-    it 'create a name and id' do
+    xit 'create a name and id' do
       project1 = TM::Project.new(5, "project1")
       expect(project1.name).to eq("project1")
       expect(project1.id).to eq(5)
@@ -16,7 +15,7 @@ describe 'TM::Project' do
   end
 
   describe "#create_task" do
-    it 'new task created' do
+    xit 'new task created' do
       project1 = TM::Project.new(5,"project1")
       expect(project1.tasks.size).to eq(0)
       project1.create_task("task1", 3)
