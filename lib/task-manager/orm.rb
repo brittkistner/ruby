@@ -10,7 +10,6 @@ module TM
     attr_reader :db_adaptor
     def initialize
       @db_adaptor = PG.connect(host: 'localhost', dbname: 'task-manager-db')
-      # @db_adapter.set_error_verbosity('PQERRORS_TERSE')
     end
 
     def create_tables
@@ -91,17 +90,19 @@ module TM
     end
 
 
-    def create_task(priority_number, description, project_id)
+    def create_task(priority_number, description, pid)
       creation_date = Time.now
       complete = false
       command = <<-SQL
         INSERT INTO tasks (priority_number,description,creation_date,complete, pid)
-        VALUES('#{priority_number}', '#{description}', '#{creation_date}', '#{complete}', '#{project_id}')
+        VALUES('#{priority_number}', '#{description}', '#{creation_date}', '#{complete}', '#{pid}')
+        RETURNING *;
       SQL
 
-      result = @db_adaptor.exec(command).values
+      result = @db_adaptor.exec(command).values[0]
 
-      puts "Task created"
+      TM::Task.new(result[0], result[1], result[2], result[3], result[4],result[5])
+      # puts "Task created"
     end
 
     def get(id) #gets the project we want
@@ -127,7 +128,7 @@ module TM
       task =[]
 
       result.each do |task|
-        task << TM::Task.new(task[0], task[1])
+        task << TM::Task.new(task[0], task[1],task[2],task[3],task[4],task[5])
       end
 
       task

@@ -43,12 +43,15 @@ describe 'ORM' do
   end
 
   describe '#create_task' do
-    it 'does something' do
-
+    it 'creates a task and adds to the database and returns a Task instance' do
+      project1 = TM.orm.add_project("code")
+      expect(TM.orm.create_task(3,"what",1)).to be_a(TM::Task)
+      binding.pry
     end
   end
 
   describe '#get' do
+
   end
 
   describe '#task_list' do
