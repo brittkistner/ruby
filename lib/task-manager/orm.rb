@@ -1,4 +1,5 @@
 require 'pg'
+require 'pry-byebug'
 
 module TM
   class ORM
@@ -90,7 +91,7 @@ module TM
     end
 
 
-    def create_task(priority_number, description, pid)
+    def create_task(priority_number, description, pid) #creates a new task
       creation_date = Time.now
       complete = false
       command = <<-SQL
@@ -102,7 +103,6 @@ module TM
       result = @db_adaptor.exec(command).values[0]
 
       TM::Task.new(result[0], result[1], result[2], result[3], result[4],result[5])
-      # puts "Task created"
     end
 
     def get(id) #gets the project we want
@@ -124,21 +124,22 @@ module TM
       SQL
 
       result = @db_adaptor.exec(command).values
+      # binding.pry
 
-      task =[]
+      tasks =[]
 
       result.each do |task|
-        task << TM::Task.new(task[0], task[1],task[2],task[3],task[4],task[5])
+        tasks << TM::Task.new(task[0].to_i, task[1].to_i,task[2],task[3],task[4],task[5].to_i) #convert to integer, convert to date
       end
+      tasks
 
-      task
     end
 
     def complete(pid) #lists completed tasks for a specific project
       command = <<-SQL
-        SELECT complete = true #check
+        SELECT *
         FROM tasks
-        WHERE pid = ('#{pid}');
+        WHERE pid = ('#{pid}') AND complete = true;
       SQL
 
       result = @db_adaptor.exec(command).values
@@ -146,10 +147,10 @@ module TM
       tasks_complete = []
 
       result.each do |task|
-        tasks_complete << TM::Task.new(task[0], task[1])
+        tasks_complete << TM::Task.new(task[0], task[1],task[2],task[3],task[4],task[5])
       end
 
-      task
+      tasks_complete
     end
 
     def mark(tid) #mark a task complete

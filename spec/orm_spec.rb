@@ -34,19 +34,9 @@ describe 'ORM' do
       project1 = TM.orm.add_project("code")
       project2 = TM.orm.add_project("homework")
 
-      # binding.pry
-
       expect(TM.orm.list_projects.map{|proj| proj.name}).to include("code", "homework")
 
       # expect(TM.orm.list_projects[0].created_at).to eq(project1.created_at)
-    end
-  end
-
-  describe '#create_task' do
-    it 'creates a task and adds to the database and returns a Task instance' do
-      project1 = TM.orm.add_project("code")
-      expect(TM.orm.create_task(3,"what",1)).to be_a(TM::Task)
-      binding.pry
     end
   end
 
@@ -54,16 +44,51 @@ describe 'ORM' do
 
   end
 
+  describe '#create_task' do
+    it 'creates a task and adds to the database and returns a Task instance' do
+      project1 = TM.orm.add_project("code")
+      expect(TM.orm.create_task(3,"what",1)).to be_a(TM::Task)
+    end
+  end
+
   describe '#task_list' do
+    it 'lists all the tasks in the database as Task instances' do
+      project1 = TM.orm.add_project("code")
+
+      TM.orm.create_task(3,"task1",1)
+      TM.orm.create_task(3,"task2",1)
+      TM.orm.create_task(3,"task3",1)
+
+      expect(TM.orm.task_list(1).map{|task| task.project_id}).to include(1,1,1)
+    end
   end
 
   describe '#complete' do
+    xit 'lists all the completed tasks in the database as Task instances' do
+      project1 = TM.orm.add_project("code")
+      project2 = TM.orm.add_project("code")
+
+      TM.orm.create_task(3,"task1",1)
+      TM.orm.create_task(3,"task2",2)
+      TM.orm.create_task(3,"task3",1)
+
+      TM.orm.mark_complete(3)
+
+      expect(TM.orm.complete(1).project_id).to eq(1)
+    end
   end
 
   describe '#mark' do
   end
 
   describe '#incomplete' do
+    xit 'lists all the completed tasks in the database as Task instances' do
+      project1 = TM.orm.add_project("code")
+
+      TM.orm.create_task(3,"task1",1)
+      TM.orm.create_task(3,"task2",1)
+      TM.orm.create_task(3,"task3",1)
+    end
   end
 
 end

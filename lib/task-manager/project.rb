@@ -22,13 +22,15 @@ class TM::Project
     TM.orm.list_projects
   end
 
-  def retrieve_completed_tasks
-    sorted = @tasks.map do |x|
-      if x.status == "complete"  #change out any arrays
+  def retrieve_completed_tasks(pid)
+    tasks_list = TM.orm.complete(pid)
+
+    sorted = tasks_list.map do |x|
+      if x.status == "complete"
         x
       end
     end
-    sorted.compact.sort do |x,y| #returns nil value run compact on sorted
+    sorted.compact.sort do |x,y|
       x.creation_date <=> y.creation_date
     end
 
