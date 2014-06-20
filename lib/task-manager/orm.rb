@@ -131,6 +131,7 @@ module TM
       result.each do |task|
         tasks << TM::Task.new(task[0].to_i, task[1].to_i,task[2],task[3],task[4],task[5].to_i) #convert to integer, convert to date
       end
+
       tasks
 
     end
@@ -157,12 +158,16 @@ module TM
       command = <<-SQL
       UPDATE tasks
       SET complete = true
-      WHERE id = ('#{tid}');
+      WHERE id = ('#{tid}')
+      RETURNING *;
       SQL
 
-      result = @db_adaptor.exec(command).values
+      result = @db_adaptor.exec(command).values.first
 
-      puts "Task was marked complete"
+      TM::Task.new(result[0], result[1], result[2], result[3], result[4],result[5])
+
+
+        #do this in task class?
     end
 
     def incomplete(pid) #lists incomplete tasks for a specific project

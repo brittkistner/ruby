@@ -72,13 +72,20 @@ describe 'ORM' do
       TM.orm.create_task(3,"task2",2)
       TM.orm.create_task(3,"task3",1)
 
-      TM.orm.mark_complete(3)
+      TM.orm.mark(3)
 
       expect(TM.orm.complete(1).project_id).to eq(1)
     end
   end
 
   describe '#mark' do
+    it 'marks a task as complete' do
+      project1 = TM.orm.add_project("code")
+
+      TM.orm.create_task(3,"task1",1)
+
+      expect(TM.orm.mark(1).complete).to eq("t") #change to boolean
+    end
   end
 
   describe '#incomplete' do
