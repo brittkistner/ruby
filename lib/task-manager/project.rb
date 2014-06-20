@@ -23,51 +23,25 @@ class TM::Project
   end
 
   def retrieve_completed_tasks(pid)
-    tasks_list = TM.orm.complete(pid)
-
-    sorted = tasks_list.map do |x|
-      if x.status == "complete"
-        x
-      end
-    end
-    sorted.compact.sort do |x,y|
-      x.creation_date <=> y.creation_date
-    end
-
-    sorted
+    tasks_complete = TM.orm.complete(pid)
+    tasks_complete
   end
 
   def project_mark_complete(task_id)
-    @tasks.map do |x|
-      if x.task_id == id && x.status == "incomplete"
-        x.mark_complete
-        x
-      end
-    end
+
+    task = TM.orm.mark(task_id, @id)
+    #what should it return? it now returns a task instance
+    puts task.complete #make this into a string
   end
 
 
-  def retrieve_incomplete_tasks
+  def retrieve_incomplete_tasks(pid) #@id?
     #sorted by priority
     #if priorities are equal
     #sort by creation date (oldest first)
-    sorted = @tasks.map do |x|
-      if x.status == "incomplete"
-        x
-      end
-    end
-    sorted.compact.sort do |x, y|
-      if x.priority_number != y.priority_number
-        x.priority_number <=> y.priority_number
-      else
-        x.creation_date <=> y.creation_date
-      end
-    end
-    sorted
-  end
 
-  def self.project_list
-    @@project_list
+    tasks_incomplete = TM.orm.incomplete(pid)
+    tasks_incomplete
   end
 
 end

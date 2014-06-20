@@ -3,8 +3,6 @@ require 'pry-byebug'
 
 module TM
   class ORM
-    # @db.create_task(data)
-    # @db.get_task(id)
     # @db.update_task(id, data)
     # @db.delete_task(id)
 
@@ -22,8 +20,7 @@ module TM
         );
       CREATE TABLE IF NOT EXISTS projects(
         name text,
-        id SERIAL PRIMARY KEY,
-        EID integer REFERENCES employees(id)
+        id SERIAL PRIMARY KEY
         );
       CREATE TABLE IF NOT EXISTS tasks(
         id SERIAL PRIMARY KEY,
@@ -105,16 +102,21 @@ module TM
       TM::Task.new(result[0], result[1], result[2], result[3], result[4],result[5])
     end
 
-    def get(id) #gets the project we want
+    def delete_task(task_id)
+
+    end
+
+    def get(id) #gets the project we want, make a method in project?
       command = <<-SQL
-        SELECT name
+        SELECT *
         FROM projects
-        WHERE id = ('#{id}');
+        WHERE id = ('#{id}')
+        RETURNING *;
       SQL
 
       result = @db_adaptor.exec(command).values[0][0]
 
-      puts "Found #{result}"
+      TM::Project.new(result[0], result[1])
     end
 
     def task_list(pid) #lists all tasks for a specific project
@@ -124,7 +126,6 @@ module TM
       SQL
 
       result = @db_adaptor.exec(command).values
-      # binding.pry
 
       tasks =[]
 
@@ -132,15 +133,29 @@ module TM
         tasks << TM::Task.new(task[0].to_i, task[1].to_i,task[2],task[3],task[4],task[5].to_i) #convert to integer, convert to date
       end
 
-      tasks
+      tasks #returns an array
 
+    end
+
+    def mark(tid,pid) #mark a task complete
+      command = <<-SQL
+      UPDATE tasks
+      SET complete = true
+      WHERE id = ('#{tid}') AND pid = ('#{pid}')
+      RETURNING *;
+      SQL
+
+      result = @db_adaptor.exec(command).values.first
+
+      TM::Task.new(result[0].to_i, result[1].to_i,result[2],result[3],result[4],result[5].to_i) #returns a task object
     end
 
     def complete(pid) #lists completed tasks for a specific project
       command = <<-SQL
         SELECT *
         FROM tasks
-        WHERE pid = ('#{pid}') AND complete = true;
+        WHERE pid = ('#{pid}') AND complete = true
+        ORDER BY priority_number, creation_date;
       SQL
 
       result = @db_adaptor.exec(command).values
@@ -148,33 +163,20 @@ module TM
       tasks_complete = []
 
       result.each do |task|
-        tasks_complete << TM::Task.new(task[0], task[1],task[2],task[3],task[4],task[5])
+        tasks_complete << TM::Task.new(task[0].to_i, task[1].to_i,task[2],task[3],task[4],task[5].to_i)
       end
 
-      tasks_complete
+      tasks_complete #returns an array
     end
 
-    def mark(tid) #mark a task complete
-      command = <<-SQL
-      UPDATE tasks
-      SET complete = true
-      WHERE id = ('#{tid}')
-      RETURNING *;
-      SQL
 
-      result = @db_adaptor.exec(command).values.first
-
-      TM::Task.new(result[0], result[1], result[2], result[3], result[4],result[5])
-
-
-        #do this in task class?
-    end
 
     def incomplete(pid) #lists incomplete tasks for a specific project
       command = <<-SQL
-      SELECT complete = false,
+      SELECT *
       FROM tasks
-      WHERE PID = ('#{pid}');
+      WHERE PID = ('#{pid}') AND complete = false
+      ORDER BY priority_number, creation_date;
       SQL
 
       result = @db_adaptor.exec(command).values
@@ -182,12 +184,44 @@ module TM
       tasks_incomplete = []
 
       result.each do |task|
-        tasks_incomplete << TM::Task.new(task[0], task[1])
+        tasks_incomplete << TM::Task.new(task[0].to_i, task[1].to_i,task[2],task[3],task[4],task[5].to_i)
       end
 
-      task
+      tasks_incomplete #returns an array
     end
 
+    def show_employees_in_project(pid)
+      #join table?
+    end
+
+    def add_employee_to_project(pid,eid) #Adds employee EID to participate in project PID
+    end
+
+    def assign_task_to_employee(tid,eid)
+      #join table
+    end
+
+    def list_employees(eid)
+    end
+
+    def create_employee(name)
+    end
+
+    def show_employee(eid) #list employee by eid and all of their participating projects
+      # command = <<-SQL
+      # SELECT *
+      # FROM tasks
+      # WHERE PID = ('#{pid}') AND complete = false
+      # ORDER BY priority_number, creation_date;
+      # SQL
+
+    end
+
+    def employee_tasks(eid) #show incomplete tasks for the employee, along with project name next to task
+    end
+
+    def employee_completed_tasks(eid) #show completed tasks for employee
+    end
 
   end
 

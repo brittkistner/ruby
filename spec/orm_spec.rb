@@ -40,9 +40,10 @@ describe 'ORM' do
     end
   end
 
-  describe '#get' do
-
-  end
+  # describe '#get' do
+  #   it 'lists a single task by project_id and returns as Project instance' do
+  #   end
+  # end
 
   describe '#create_task' do
     it 'creates a task and adds to the database and returns a Task instance' do
@@ -50,6 +51,12 @@ describe 'ORM' do
       expect(TM.orm.create_task(3,"what",1)).to be_a(TM::Task)
     end
   end
+
+  # describe '#delete_task'do
+  #   it 'deletes a task by task_id' do
+  #     #returns what?
+  #   end
+  # end
 
   describe '#task_list' do
     it 'lists all the tasks in the database as Task instances' do
@@ -63,8 +70,21 @@ describe 'ORM' do
     end
   end
 
+  describe '#mark' do
+    it 'marks a task as complete' do
+      project1 = TM.orm.add_project("code")
+
+      TM.orm.create_task(3,"task1",1)
+
+      result = TM.orm.mark(1,1)
+
+      expect(result).to be_a(TM::Task)
+      expect(result.complete).to eq("t") #change to boolean
+    end
+  end
+
   describe '#complete' do
-    xit 'lists all the completed tasks in the database as Task instances' do
+    it 'lists all the completed tasks in the database as Task instances' do
       project1 = TM.orm.add_project("code")
       project2 = TM.orm.add_project("code")
 
@@ -72,29 +92,23 @@ describe 'ORM' do
       TM.orm.create_task(3,"task2",2)
       TM.orm.create_task(3,"task3",1)
 
-      TM.orm.mark(3)
+      TM.orm.mark(1,1)
 
-      expect(TM.orm.complete(1).project_id).to eq(1)
-    end
-  end
-
-  describe '#mark' do
-    it 'marks a task as complete' do
-      project1 = TM.orm.add_project("code")
-
-      TM.orm.create_task(3,"task1",1)
-
-      expect(TM.orm.mark(1).complete).to eq("t") #change to boolean
+      expect(TM.orm.complete(1)).to be_a(Array)
+      expect(TM.orm.complete(1).map{|task| task.project_id}).to include(1)
     end
   end
 
   describe '#incomplete' do
-    xit 'lists all the completed tasks in the database as Task instances' do
+    it 'lists all the incomplete tasks in the database as Task instances' do
       project1 = TM.orm.add_project("code")
 
       TM.orm.create_task(3,"task1",1)
       TM.orm.create_task(3,"task2",1)
       TM.orm.create_task(3,"task3",1)
+
+      expect(TM.orm.complete(1)).to be_a(Array)
+      expect(TM.orm.incomplete(1).map{|task| task.project_id}).to include(1,1,1)
     end
   end
 
