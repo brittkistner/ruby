@@ -102,7 +102,19 @@ module TM
       TM::Task.new(result[0], result[1], result[2], result[3], result[4],result[5])
     end
 
-    def delete_task(task_id)
+    def delete_task(task_id) #deletes a task
+      command = <<-SQL
+        DELETE
+        FROM tasks
+        WHERE id = ('#{task_id}')
+        RETURNING *;
+      SQL
+
+      result = @db_adaptor.exec(command).values[0]
+
+      task = TM::Task.new(result[0], result[1], result[2], result[3], result[4],result[5])
+
+      # puts "Deleted task with id:#{task.id}."
 
     end
 
@@ -188,8 +200,6 @@ module TM
 
       tasks_incomplete #returns an array
     end
-
-
 
     def create_employee(name)
       command = <<-SQL

@@ -58,11 +58,16 @@ describe 'ORM' do
     end
   end
 
-  # describe '#delete_task'do
-  #   it 'deletes a task by task_id' do
-  #     #returns what?
-  #   end
-  # end
+  describe '#delete_task'do
+    it 'deletes a task by task_id' do
+      project1 = TM.orm.add_project("code")
+      TM.orm.create_task(3,"task1",1)
+
+      expect(TM.orm.delete_task(1)).to be_a(TM::Task)
+
+      # expect(TM.orm.delete_task(1).complete).to eq("f")
+    end
+  end
 
   describe '#task_list' do
     it 'lists all the tasks in the database as Task instances' do
@@ -115,6 +120,56 @@ describe 'ORM' do
 
       expect(TM.orm.complete(1)).to be_a(Array)
       expect(TM.orm.incomplete(1).map{|task| task.project_id}).to include(1,1,1)
+    end
+  end
+
+  describe '#create_employees' do
+    it 'adds the employee to the database and returns an Employee instance' do
+      expect(TM.orm.create_employees()).to be_a(TM::Employee)
+    end
+  end
+
+  describe '#list_employees' do
+    it 'lists all the employees in the database and returns as Employee instances' do
+      expect(TM.orm.list_employees()).to be_a(TM::Employee)
+
+    end
+  end
+
+  describe '#show_employees' do
+    it 'lists employees by eid and all of their participating projects and returns as Employee instances' do
+      expect(TM.orm.show_employees()).to be_a(TM::Employee)
+
+    end
+  end
+
+  describe '#show_employees_in_project' do
+    it 'adds the employee to the database and returns an Employee instance' do
+      #TO DO
+    end
+  end
+
+
+  describe '#add_employee_to_project' do
+    it 'adds the employee to the database and returns an Employee instance' do
+    end
+  end
+
+
+  describe '#assign_task_to_employee' do
+    it 'adds the employee to the database and returns an Employee instance' do
+    end
+  end
+
+
+  describe '#employee_tasks' do
+    it 'shows incomplete tasks for the employee, along with project name next to task' do
+    end
+  end
+
+
+  describe '#employee_completed_tasks' do
+    it 'shows completed tasks for employees' do
     end
   end
 
