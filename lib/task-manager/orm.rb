@@ -111,10 +111,9 @@ module TM
         SELECT *
         FROM projects
         WHERE id = ('#{id}')
-        RETURNING *;
       SQL
 
-      result = @db_adaptor.exec(command).values[0][0]
+      result = @db_adaptor.exec(command).values.first
 
       TM::Project.new(result[0], result[1])
     end
@@ -190,6 +189,51 @@ module TM
       tasks_incomplete #returns an array
     end
 
+
+
+    def create_employee(name)
+      command = <<-SQL
+        INSERT INTO employees(name)
+        VALUES('#{name}')
+        RETURNING *;
+      SQL
+
+      result = @db_adaptor.exec(command).values.first
+      TM::Employee.new(result[0].to_i, result[1])
+    end
+
+    def list_employees(eid)
+      command = <<-SQL
+        SELECT * FROM employees
+        WHERE id = ('#{eid}');
+      SQL
+
+      result = @db_adaptor.exec(command).values
+
+      employees =[]
+
+      result.each do |employee|
+        employees << TM::Employee.new(employee[0].to_i, employee[1])
+      end
+
+      employees #returns an array
+
+    end
+
+    def show_employee(eid) #list employee by eid and all of their participating projects
+      command = <<-SQL
+      SELECT *
+      FROM joins_projects_employees AS pe
+      JOIN projects AS p
+      ON pe.pid = p.id
+      WHERE pe.eid = '#{eid}';
+      SQL
+
+      result = @db_adaptor.exec(command).values
+
+
+    end
+
     def show_employees_in_project(pid)
       #join table?
     end
@@ -201,23 +245,18 @@ module TM
       #join table
     end
 
-    def list_employees(eid)
-    end
-
-    def create_employee(name)
-    end
-
-    def show_employee(eid) #list employee by eid and all of their participating projects
-      # command = <<-SQL
-      # SELECT *
-      # FROM tasks
-      # WHERE PID = ('#{pid}') AND complete = false
-      # ORDER BY priority_number, creation_date;
-      # SQL
-
-    end
-
     def employee_tasks(eid) #show incomplete tasks for the employee, along with project name next to task
+      command = <<-SQL
+      SELECT *
+      FROM joins_tasks_employees AS te
+      JOIN tasks AS t
+      ON te.tid = t.id
+      JOIN projects AS priority_number
+      ON t.pid = pid
+      WHERE te.eid = '#{eid}';
+      SQL
+
+      result = @db_adaptor.exec(command).values
     end
 
     def employee_completed_tasks(eid) #show completed tasks for employee

@@ -40,10 +40,16 @@ describe 'ORM' do
     end
   end
 
-  # describe '#get' do
-  #   it 'lists a single task by project_id and returns as Project instance' do
-  #   end
-  # end
+  describe '#get' do
+    it 'lists a single project by project_id and returns as Project instance' do
+      TM.orm.add_project("code")
+
+      project1 = TM.orm.get(1)
+
+      expect(project1).to be_a(TM::Project)
+      expect(project1.name).to eq("code")
+    end
+  end
 
   describe '#create_task' do
     it 'creates a task and adds to the database and returns a Task instance' do
