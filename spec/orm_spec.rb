@@ -129,47 +129,120 @@ describe 'ORM' do
     end
   end
 
-  describe '#list_employees' do
-    xit 'lists all the employees in the database and returns as Employee instances' do
-      expect(TM.orm.list_employees()).to be_a(TM::Employee)
+  describe '#list_all_employees' do
+    it 'lists all the employees in the database and returns as Employee instances' do
+      expect(TM.orm.create_employee("smith")).to be_a(TM::Employee)
+      expect(TM.orm.create_employee("ben")).to be_a(TM::Employee)
+      expect(TM.orm.create_employee("wahoo")).to be_a(TM::Employee)
 
+      expect(TM.orm.list_all_employees.map{|employee| employee.name}).to include("smith", "ben", "wahoo")
     end
   end
 
-  describe '#show_employees' do
-    xit 'lists employees by eid and all of their participating projects and returns as Employee instances' do
-      expect(TM.orm.show_employees()).to be_a(TM::Employee)
+  describe '#add_employee_to_project' do
+    xit 'adds the employee to the database' do
+      TM.orm.create_employee("smith")
+      TM.orm.add_project("code")
 
+      expect(TM.orm.add_employee_to_project(1,1)).to eq(true)
+    end
+  end
+
+  describe '#show_employee_projects' do
+    xit 'lists employees by eid and all of their participating projects and returns as Employee instances' do
+      TM.orm.create_employee("smith")
+      TM.orm.create_employee("ben")
+
+
+      TM.orm.add_project("code")
+      TM.orm.add_project("hello_world")
+
+      TM.orm.add_employee_to_project(1,1)
+      TM.orm.add_employee_to_project(2,2)
+
+      expect(TM.orm.show_employee_projects(2)).to be_a(Array)
     end
   end
 
   describe '#show_employees_in_project' do
-    xit 'adds the employee to the database and returns an Employee instance' do
-      #TO DO
-    end
-  end
+    xit 'shows all employees in a specific project' do
+      TM.orm.add_project("code")
+
+      TM.orm.create_employee("smith")
+      TM.orm.create_employee("ben")
+      TM.orm.create_employee("wahoo")
+
+      TM.orm.add_employee_to_project(1,1) #pid,eid
+      TM.orm.add_employee_to_project(1,2)
+      TM.orm.add_employee_to_project(1,3)
 
 
-  describe '#add_employee_to_project' do
-    xit 'adds the employee to the database and returns an Employee instance' do
+      expect(TM.orm.show_employees_in_project(1).map{|task| employee.name}).to include("smith", "ben", "wahoo")
     end
   end
 
 
   describe '#assign_task_to_employee' do
     xit 'adds the employee to the database and returns an Employee instance' do
+      project1 = TM.orm.add_project("code")
+
+      TM.orm.create_task(3,"task1",1)
+
+      TM.orm.create_employee("smith")
+
+      task = TM.orm.assign_task_to_employee(1,1) #tid,eid
+
+      binding.pry
+
+      # expect(task).to be_a(Array) #what should this return
+
     end
   end
 
 
   describe '#employee_tasks' do
     xit 'shows incomplete tasks for the employee, along with project name next to task' do
+      project1 = TM.orm.add_project("code")
+      project2 = TM.orm.add_project("code")
+
+      TM.orm.create_task(3,"task1",1)
+      TM.orm.create_task(3,"task2",2)
+      TM.orm.create_task(3,"task3",1)
+
+      TM.orm.create_employee("smith")
+      TM.orm.create_employee("ben")
+
+      TM.orm.assign_task_to_employee(1,1) #tid,eid
+      TM.orm.assign_task_to_employee(2,1)
+
+      TM.orm.mark(1,1) #tid,pid => marking task1 complete
+
+      # binding.pry
+
+      expect(TM.orm.employee_tasks(1)).to be_a(Array)
+
     end
   end
 
 
   describe '#employee_completed_tasks' do
-    xit 'shows completed tasks for employees' do
+    xit 'takes an employee id and shows completed tasks for employees' do
+
+      project1 = TM.orm.add_project("code")
+      project2 = TM.orm.add_project("code")
+
+      TM.orm.create_task(3,"task1",1)
+      TM.orm.create_task(3,"task2",2)
+      TM.orm.create_task(3,"task3",1)
+
+      TM.orm.assign_task_to_employee(1,1) #tid,eid
+
+      TM.orm.mark(1,1)
+
+      completed_tasks = TM.orm.employee_completed_tasks(1)
+
+      expect(completed_tasks).to be_a(Array)
+      expect(completed_tasks.map{|task| task.description}).to include("task1")
     end
   end
 

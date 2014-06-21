@@ -8,21 +8,13 @@ class TM::Task
     @task_id = id
     @complete = complete
     @creation_date = creation_date
-    # self.priority_number = p_number
     @priority_number = p_number
     @description = description
     @project_id = project_id
-  end
 
-  # def priority_number=(number)
-  #   if number > 5
-  #     @priority_number = 5
-  #   elsif number < 0
-  #     @priority_number = 0
-  #   else
-  #     @priority_number = number
-  #   end
-  # end
+    #bring everything in and then convert to either integer or true or false
+    #params[whatever number is complete, like 5] if "t" then @complete = true : if "f" then @complete = false
+  end
 
   def mark_complete
     if @complete == false
@@ -30,9 +22,4 @@ class TM::Task
     end
   end
 
-  # def self.generate_id
-  #   tmp = @@id_counter ||= 0
-  #   @@id_counter +=1
-  #   tmp
-  # end
 end
