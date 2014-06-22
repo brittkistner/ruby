@@ -1,3 +1,5 @@
+require 'time'
+
 class TM::Task
 
   attr_accessor :complete
@@ -5,12 +7,12 @@ class TM::Task
 
 
   def initialize(id, p_number, description, creation_date, complete, project_id)
-    @task_id = id
-    @complete = complete
-    @creation_date = creation_date
-    @priority_number = p_number
+    @task_id = Integer(id)
+    @complete = complete == "t" ? true : false
+    @creation_date = Date.parse(creation_date)
+    @priority_number = Integer(p_number)
     @description = description
-    @project_id = project_id
+    @project_id = Integer(project_id)
 
     #bring everything in and then convert to either integer or true or false
     #params[whatever number is complete, like 5] if "t" then @complete = true : if "f" then @complete = false

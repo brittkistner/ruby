@@ -157,43 +157,43 @@ class TM::Client
   def self.add_employee_to_project(pid,eid)
     TM::Project.add_employee_to_project(pid,eid)
     puts "\n"
-    puts "Added employee with id: #{eid} to project with pid: #{pid}" #names of project and employe?
+    puts "Added employee with id: #{eid} to project with pid: #{pid}" #names of project and employee?
     puts "\n"
   end
 
 #Task Methods
 
-def self.create_task(priority_number, description, pid)
-  TM::Project.create_task(priority_number,description,pid)
-  puts "\n"
-  puts "Task #{result.id} created"
-  puts "\n"
-end
-
-def self.task_list(pid)
-  task_list = TM::Project.task_list(pid)
-  task_list.each do |task|
+  def self.create_task(priority_number, description, pid)
+    TM::Project.create_task(priority_number,description,pid)
     puts "\n"
-    puts "Task ID: #{task.id}"
-    puts "Task Priority Number: #{task.priority_number}"
-    puts "Task Description: #{task.description}"
+    puts "Task #{result.id} created"
     puts "\n"
   end
-end
 
-def self.mark(tid,pid)
-  TM::Project.project_mark_complete(tid,pid)
-  puts "\n"
-  puts "Task ID: #{tid} marked complete"
-  puts "\n"
-end
+  def self.task_list(pid)
+    task_list = TM::Project.task_list(pid)
+    task_list.each do |task|
+      puts "\n"
+      puts "Task ID: #{task.id}"
+      puts "Task Priority Number: #{task.priority_number}"
+      puts "Task Description: #{task.description}"
+      puts "\n"
+    end
+  end
 
-def self.assign_task_to_employee(tid,eid)
-  TM::Employee.assign_task_to_employee(tid,eid)
-  puts "\n"
-  puts "Task ID: #{tid} assigned to employee with id: #{eid}." #use employee name?
-  puts "\n"
-end
+  def self.mark(tid,pid)
+    TM::Project.project_mark_complete(tid,pid)
+    puts "\n"
+    puts "Task ID: #{tid} marked complete"
+    puts "\n"
+  end
+
+  def self.assign_task_to_employee(tid,eid)
+    TM::Employee.assign_task_to_employee(tid,eid)
+    puts "\n"
+    puts "Task ID: #{tid} assigned to employee with id: #{eid}." #use employee name?
+    puts "\n"
+  end
 
 #Employee Methods
 
@@ -209,6 +209,7 @@ end
     puts "Employee Name: #{employee.name}"
     puts "Employee ID: #{employee.id}"
     puts "\n"
+    end
   end
 
   def self.employee_and_projects(eid)

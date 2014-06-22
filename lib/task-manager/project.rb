@@ -9,21 +9,34 @@ class TM::Project
 
 
   def initialize(name,id)
-    @id = id
+    @id = Integer(id)
     @name = name
   end
 
-  def self.add_project
+  def self.add_project(name)
+    result = TM.orm.add_project(name)
+
+    project = TM::Project.new(result[0], result[1])
+
+    project
     #return a project instance
   end
 
-  def self.get(id)
+  def self.list_projects
+    result = TM.orm.list_projects
 
+    projects = []
+
+    result.each do |project|
+      projects << TM::Project.new(project[0], project[1])
+    end
+
+    projects
   end
 
   def create_task(priority_number,description,id)
     result = TM.orm.create_task(priority_number,description,@id)
-    task = TM::Task.new(result[0].to_i, result[1].to_i, result[2], result[3], result[4],result[5].to_i)
+    task = TM::Task.new(result[0], result[1], result[2], result[3], result[4],result[5])
     task #returns task object
   end
 
@@ -33,15 +46,13 @@ class TM::Project
     tasks =[]
 
     result.each do |task|
-      tasks << TM::Task.new(task[0].to_i, task[1].to_i,task[2],task[3],task[4],task[5].to_i)
+      tasks << TM::Task.new(task[0], task[1],task[2],task[3],task[4],task[5])
     end
 
     tasks #returns an array
   end
 
-  def self.list_projects
-    TM.orm.list_projects #returns an array of projects
-  end
+
 
   def project_mark_complete(task_id,pid)
     TM.orm.mark(task_id, pid) #returns true
@@ -53,7 +64,7 @@ class TM::Project
     tasks_complete = []
 
     result.each do |task|
-      tasks_complete << TM::Task.new(task[0].to_i, task[1].to_i,task[2],task[3],task[4],task[5].to_i)
+      tasks_complete << TM::Task.new(task[0], task[1],task[2],task[3],task[4],task[5])
     end
 
     tasks_complete #returns an array of completed tasks
@@ -69,7 +80,7 @@ class TM::Project
     tasks_incomplete = []
 
     result.each do |task|
-      tasks_incomplete << TM::Task.new(task[0].to_i, task[1].to_i,task[2],task[3],task[4],task[5].to_i)
+      tasks_incomplete << TM::Task.new(task[0], task[1],task[2],task[3],task[4],task[5])
     end
 
     tasks_incomplete #returns an array of incomplete task objects
@@ -82,7 +93,7 @@ class TM::Project
     employees =[]
 
     result.each do |employee|
-      employees << TM::Employee.new(employee[0].to_i, employee[1])
+      employees << TM::Employee.new(employee[0], employee[1])
     end
 
     employees

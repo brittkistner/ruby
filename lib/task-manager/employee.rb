@@ -3,7 +3,7 @@ class TM::Employee
   attr_reader :name, :id
 
   def initialize(id, name)
-    @id = id
+    @id = Integer(id)
     @name = name
   end
 
@@ -11,7 +11,7 @@ class TM::Employee
 
   def self.add_employee(name)
     result = TM.orm.create_employee(name)
-    TM::Employee.new(result[0].to_i, result[1])
+    TM::Employee.new(result[0], result[1])
   end
 
   def self.list_employees
@@ -20,7 +20,7 @@ class TM::Employee
     employees =[]
 
     result.each do |employee|
-      employees << TM::Employee.new(employee[0].to_i, employee[1])
+      employees << TM::Employee.new(employee[0], employee[1])
     end
 
     employees
@@ -35,10 +35,27 @@ class TM::Employee
   end
 
   def self.incomplete_tasks(eid)
+    result = TM.orm.employee_incomplete_tasks(eid)
+
+    employee_tasks_incomplete = []
+
+    result.each do |task|
+      employee_tasks_incomplete << TM::Task.new(task[0], task[1],task[2],task[3],task[4],task[5])
+    end
+
+    employee_tasks_incomplete #returns an array
     #this should return an employee name and return an array of incomplete tasks (id, description, priority_number)
   end
 
   def self.complete_tasks(eid)
+    TM.orm.employee_completed_tasks(eid)
+    employee_tasks_complete = []
+
+    result.each do |task|
+      employee_tasks_complete << TM::Task.new(task[0], task[1],task[2],task[3],task[4],task[5])
+    end
+
+    employee_tasks_complete #returns an array
      #this should return an employee name and return an array of incomplete tasks (id, description, priority_number)
   end
 end

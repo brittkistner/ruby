@@ -3,7 +3,7 @@ require 'pry-byebug'
 
 
 describe 'TM::Task' do
-  it "exists" do
+  xit "exists" do
     expect(TM::Task).to be_a(Class)
   end
 
@@ -17,7 +17,7 @@ describe 'TM::Task' do
       expect(task1.creation_date).to be_a(date) #check for date
     end
 
-    it "has a priority number" do
+    xit "has a priority number" do
       project1 = TM.orm.add_project("project1")
       task1 = project1.create_task(2,"task1",1)
 

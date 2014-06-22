@@ -3,10 +3,9 @@ require 'pry-byebug'
 
 module TM
   class ORM
-    # @db.update_task(id, data)
-    # @db.delete_task(id)
 
     attr_reader :db_adaptor
+
     def initialize
       @db_adaptor = PG.connect(host: 'localhost', dbname: 'task-manager-db')
     end
@@ -70,27 +69,21 @@ module TM
         VALUES('#{name}')
         RETURNING *;
       SQL
-      result = @db_adaptor.exec(command).values.first
-      TM::Project.new(result[0], result[1].to_i)
+      @db_adaptor.exec(command).values.first
+      #return an array
+      # TM::Project.new(result[0], result[1].to_i)
     end
 
     def list_projects
       command = <<-SQL
         SELECT * FROM projects;
       SQL
-      result = @db_adaptor.exec(command).values
 
-      projects = []
-
-      result.each do |project|
-        projects << TM::Project.new(project[0], project[1].to_i)
-      end
-
-      projects
+      @db_adaptor.exec(command).values
     end
 
 
-    def create_task(priority_number, description, pid) #creates a new task
+    def create_task(priority_number, description, pid)
       creation_date = Time.now
       complete = false
       command = <<-SQL
@@ -100,38 +93,9 @@ module TM
       SQL
 
       result = @db_adaptor.exec(command).values[0]
-
-      #returns array of task strings, create task object in projects class
-
-      # TM::Task.new(result[0].to_i, result[1].to_i, result[2], result[3], result[4],result[5].to_i)
     end
 
-    # def delete_task(task_id) #deletes a task
-    #   command = <<-SQL
-    #     DELETE
-    #     FROM tasks
-    #     WHERE id = ('#{task_id}')
-    #     RETURNING *;
-    #   SQL
 
-    #   result = @db_adaptor.exec(command).values[0]
-
-    #   true
-    #   # puts "Deleted task with id:#{task.id}."
-
-    # end
-
-    # def get(id) #gets the project we want, make a method in project?
-    #   command = <<-SQL
-    #     SELECT *
-    #     FROM projects
-    #     WHERE id = ('#{id}')
-    #   SQL
-
-    #   result = @db_adaptor.exec(command).values.first
-
-    #   TM::Project.new(result[0], result[1])
-    # end
 
     def task_list(pid) #lists all tasks for a specific project
       command = <<-SQL
@@ -253,50 +217,62 @@ module TM
       true
     end
 
-    # def employee_tasks(eid) #show incomplete tasks for the employee, along with project name next to task
+    def employee_incomplete_tasks(eid) #show incomplete tasks for the employee, along with project name next to task
+      command = <<-SQL
+      SELECT t.id, t.priority_number, t.description, t.creation_date, t.complete, t.pid, p.name
+      FROM joins_tasks_employees AS te
+      JOIN tasks AS t
+      ON te.tid = t.id
+      JOIN projects AS p
+      ON t.pid = pid
+      WHERE te.eid = '#{eid}' AND t.complete = false;
+      SQL
+
+      @db_adaptor.exec(command).values #returns an array
+    end
+
+    def employee_completed_tasks(eid) #show completed tasks for employee
+      command = <<-SQL
+      SELECT t.id, t.priority_number, t.description, t.creation_date, t.complete, t.pid, p.name
+      FROM joins_tasks_employees AS te
+      JOIN tasks AS t
+      ON te.tid = t.id
+      JOIN projects AS p
+      ON t.pid = pid
+      WHERE te.eid = '#{eid}' AND t.complete = true;
+      SQL
+
+      @db_adaptor.exec(command).values #returns an array
+    end
+
+####################################
+    # @db.update_task(id, data)
+
+        # def delete_task(task_id) #deletes a task
     #   command = <<-SQL
-    #   SELECT t.id, t.priority_number, t.description, t.creation_date, t.complete, t.pid, p.name
-    #   FROM joins_tasks_employees AS te
-    #   JOIN tasks AS t
-    #   ON te.tid = t.id
-    #   JOIN projects AS p
-    #   ON t.pid = pid
-    #   WHERE te.eid = '#{eid}' AND t.complete = false;
+    #     DELETE
+    #     FROM tasks
+    #     WHERE id = ('#{task_id}')
+    #     RETURNING *;
     #   SQL
 
-    #   result = @db_adaptor.exec(command).values
+    #   result = @db_adaptor.exec(command).values[0]
 
-    #   employee_tasks_incomplete = []
-
-    #   result.each do |task|
-    #     employee_tasks_incomplete << TM::Task.new(task[0].to_i, task[1].to_i,task[2],task[3],task[4],task[5].to_i)
-    #   end
-
-    #   employee_tasks_incomplete #returns an array
+    #   true
+    #   # puts "Deleted task with id:#{task.id}."
 
     # end
 
-    # def employee_completed_tasks(eid) #show completed tasks for employee
+    # def get(id) #gets the project we want, make a method in project?
     #   command = <<-SQL
-    #   SELECT t.id, t.priority_number, t.description, t.creation_date, t.complete, t.pid, p.name
-    #   FROM joins_tasks_employees AS te
-    #   JOIN tasks AS t
-    #   ON te.tid = t.id
-    #   JOIN projects AS p
-    #   ON t.pid = pid
-    #   WHERE te.eid = '#{eid}' AND t.complete = true;
+    #     SELECT *
+    #     FROM projects
+    #     WHERE id = ('#{id}')
     #   SQL
 
-    #   result = @db_adaptor.exec(command).values
+    #   result = @db_adaptor.exec(command).values.first
 
-    #   employee_tasks_complete = []
-
-    #   result.each do |task|
-    #     employee_tasks_complete << TM::Task.new(task[0].to_i, task[1].to_i,task[2],task[3],task[4],task[5].to_i)
-    #   end
-
-    #   employee_tasks_complete #returns an array
-
+    #   TM::Project.new(result[0], result[1])
     # end
 
   end
