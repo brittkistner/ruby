@@ -52,8 +52,6 @@ class TM::Project
     tasks #returns an array
   end
 
-
-
   def project_mark_complete(task_id,pid)
     TM.orm.mark(task_id, pid) #returns true
   end

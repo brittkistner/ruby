@@ -60,26 +60,27 @@ describe 'ORM' do
     end
   end
 
-  describe '#delete_task'do
-    xit 'deletes a task by task_id' do
-      project1 = TM.orm.add_project("code")
-      TM.orm.create_task(3,"task1",1)
+  # describe '#delete_task'do
+  #   xit 'deletes a task by task_id' do
+  #     project1 = TM.orm.add_project("code")
+  #     TM.orm.create_task(3,"task1",1)
 
-      expect(TM.orm.delete_task(1)).to be_a(TM::Task)
+  #     expect(TM.orm.delete_task(1)).to be_a(TM::Task)
 
-      # expect(TM.orm.delete_task(1).complete).to eq("f")
-    end
-  end
+  #     # expect(TM.orm.delete_task(1).complete).to eq("f")
+  #   end
+  # end
 
   describe '#task_list' do
-    xit 'lists all the tasks in the database as Task instances' do
-      project1 = TM.orm.add_project("code")
+    it 'lists all the tasks in the database as Task instances' do
+      TM.orm.add_project("code")
 
       TM.orm.create_task(3,"task1",1)
       TM.orm.create_task(3,"task2",1)
       TM.orm.create_task(3,"task3",1)
 
-      expect(TM.orm.task_list(1).map{|task| task.project_id}).to include(1,1,1)
+      expect(TM.orm.task_list(1)).to be_a(Array)
+      expect(TM.orm.task_list(1).size).to eq(3)
     end
   end
 
