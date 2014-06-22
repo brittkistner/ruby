@@ -57,7 +57,7 @@ class TM::Project
   end
 
   def retrieve_completed_tasks(pid)
-    result = TM.orm.complete(pid)
+    result = TM.orm.retrieve_completed_tasks_for_project(pid)
 
     tasks_complete = []
 
@@ -73,7 +73,7 @@ class TM::Project
     #if priorities are equal
     #sort by creation date (oldest first)
 
-    result = TM.orm.incomplete(@id) #returns an array
+    result = TM.orm.retrieve_incomplete_tasks_for_project(pid)
 
     tasks_incomplete = []
 

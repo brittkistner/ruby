@@ -120,7 +120,7 @@ module TM
       true
     end
 
-    def complete(pid) #lists completed tasks for a specific project
+    def retrieve_completed_tasks_for_project(pid) #lists completed tasks for a specific project
       command = <<-SQL
         SELECT *
         FROM tasks
@@ -133,7 +133,7 @@ module TM
       result
     end
 
-    def incomplete(pid) #lists incomplete tasks for a specific project
+    def retrieve_incomplete_tasks_for_project(pid) #lists incomplete tasks for a specific project
       command = <<-SQL
       SELECT *
       FROM tasks
@@ -144,7 +144,6 @@ module TM
       result = @db_adaptor.exec(command).values
 
       result
-      #returns an array of strings, convert to task objects in project class
     end
 
     def create_employee(name)

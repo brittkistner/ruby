@@ -7,8 +7,6 @@ class TM::Employee
     @name = name
   end
 
-  #create show_employee_projects(eid) methods
-
   def self.add_employee(name)
     result = TM.orm.create_employee(name)
     TM::Employee.new(result[0], result[1])
@@ -31,6 +29,7 @@ class TM::Employee
   end
 
   def self.show_employee_projects(eid)
+
     #this should return an employee name and return an array of projects (and id) for all employee projects
   end
 
