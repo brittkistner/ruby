@@ -20,6 +20,8 @@ class TM::Client
                       along with the project name next to each task"
     puts "--Type 'emp history EID' - Show completed tasks for employee with id=EID"
     puts "--Type 'quit' to exit"
+
+    # puts "Deleted task with id:#{task.id}."
   end
 
   def self.run

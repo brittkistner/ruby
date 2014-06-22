@@ -23,11 +23,14 @@ describe 'TM::Project' do
   end
 
   describe '.show_employees_in_project' do
-    xit 'returns an array of employee instances from a project given the PID' do
-      project1 = TM::Project.add_project("project1")
+    it 'returns an array of employee instances from a project given the PID' do
+      TM::Project.add_project("project1")
 
       TM::Employee.add_employee('Sara')
       TM::Employee.add_employee('Paul')
+
+      TM::Project.add_employee_to_project(1,1)
+      TM::Project.add_employee_to_project(1,2)
 
       expect(TM::Project.show_employees_in_project(1)).to be_a(Array)
       expect(TM::Project.show_employees_in_project(1)[0]).to be_a(TM::Employee)
@@ -35,8 +38,8 @@ describe 'TM::Project' do
   end
 
   describe '.add_employee_to_project' do
-    xit 'adds an employee to a project (given an EID and PID) and returns true if the employee is successfully added' do
-      project1 = TM::Project.add_project("project1")
+    it 'adds an employee to a project (given an EID and PID) and returns true if the employee is successfully added' do
+      TM::Project.add_project("project1")
 
       TM::Employee.add_employee('Sara')
 
@@ -79,7 +82,7 @@ describe 'TM::Project' do
   end
 
 
-  describe '#project_mark_complete and #retrieve_completed_tasks' do
+  describe '#project_mark_complete and #retrieve_completed_tasks' do  #TEST FOR ORDER OF RETURN
     it 'mark a task as completed by TID and PID and return a list of completed Task intances' do
       project1 = TM::Project.add_project("project1")
 
@@ -95,7 +98,7 @@ describe 'TM::Project' do
     end
   end
 
-  describe "#retrieve_incomplete_tasks" do
+  describe "#retrieve_incomplete_tasks" do #TEST FOR ORDER OF RETURN
     it 'returns an array of Task instances which are incomplete' do
       project1 = TM::Project.add_project("project1")
 

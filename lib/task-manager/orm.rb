@@ -70,8 +70,6 @@ module TM
         RETURNING *;
       SQL
       @db_adaptor.exec(command).values.first
-      #return an array
-      # TM::Project.new(result[0], result[1].to_i)
     end
 
     def list_projects
@@ -169,17 +167,17 @@ module TM
       INSERT INTO joins_projects_employees
       (pid, eid)
       VALUES
-      (pid,eid);
+      ('#{pid}','#{eid}');
       SQL
 
-      result = @db_adaptor.exec(command).values
+      @db_adaptor.exec(command).values
 
       true
     end
 
     def show_employee_projects(eid) #list employee by eid and all of their participating projects
       command = <<-SQL
-      SELECT p.eid, p.name
+      SELECT p.name, p.id
       FROM joins_projects_employees AS pe
       JOIN projects AS p
       ON pe.PID = p.id
@@ -188,9 +186,9 @@ module TM
 
       result = @db_adaptor.exec(command).values
 
-      #returns as an array with eid and name (how should I return it)
-      #call this in the employee class and return list of projects
-      #convert to an array of objects
+      result
+
+      #returns as an array of project information
 
     end
 
@@ -204,7 +202,7 @@ module TM
       SQL
 
       @db_adaptor.exec(command).values
-      #returns an array with infor about the employee name(s) and id(s)
+      #returns an array with info about the employee name(s) and id(s)
     end
 
     def assign_task_to_employee(tid,eid) #task assign TID EID' - Assign task to employee
@@ -244,23 +242,24 @@ module TM
       @db_adaptor.exec(command).values #returns an array
     end
 
+    def delete_task(task_id) #deletes a task
+      command = <<-SQL
+        DELETE
+        FROM tasks
+        WHERE id = ('#{task_id}')
+        RETURNING *;
+      SQL
+
+      result = @db_adaptor.exec(command).values[0]
+
+      true
+
+    end
+
 ####################################
     # @db.update_task(id, data)
 
-        # def delete_task(task_id) #deletes a task
-    #   command = <<-SQL
-    #     DELETE
-    #     FROM tasks
-    #     WHERE id = ('#{task_id}')
-    #     RETURNING *;
-    #   SQL
 
-    #   result = @db_adaptor.exec(command).values[0]
-
-    #   true
-    #   # puts "Deleted task with id:#{task.id}."
-
-    # end
 
     # def get(id) #gets the project we want, make a method in project?
     #   command = <<-SQL

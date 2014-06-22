@@ -1,3 +1,4 @@
+require 'date'
 require 'time'
 
 class TM::Task
@@ -9,7 +10,7 @@ class TM::Task
   def initialize(id, p_number, description, creation_date, complete, project_id)
     @task_id = Integer(id)
     @complete = complete == "t" ? true : false
-    @creation_date = Date.parse(creation_date)
+    @creation_date = DateTime.parse(creation_date)
     @priority_number = Integer(p_number)
     @description = description
     @project_id = Integer(project_id)

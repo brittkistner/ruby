@@ -91,7 +91,7 @@ class TM::Project
     employees =[]
 
     result.each do |employee|
-      employees << TM::Employee.new(employee[0], employee[1])
+      employees << TM::Employee.new(employee[0], employee[1]) #id and then name
     end
 
     employees

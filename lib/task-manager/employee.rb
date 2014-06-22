@@ -29,8 +29,17 @@ class TM::Employee
   end
 
   def self.show_employee_projects(eid)
+    result = TM.orm.show_employee_projects(eid)
 
-    #this should return an employee name and return an array of projects (and id) for all employee projects
+    employee_projects = []
+
+    result.each do |project|
+      employee_projects << TM::Project.new(project[0], project[1])
+    end
+
+    employee_projects
+
+    #this should return an array of projects for an employee
   end
 
   def self.incomplete_tasks(eid)
@@ -43,18 +52,16 @@ class TM::Employee
     end
 
     employee_tasks_incomplete #returns an array
-    #this should return an employee name and return an array of incomplete tasks (id, description, priority_number)
   end
 
   def self.complete_tasks(eid)
-    TM.orm.employee_completed_tasks(eid)
+    result = TM.orm.employee_completed_tasks(eid)
     employee_tasks_complete = []
 
     result.each do |task|
       employee_tasks_complete << TM::Task.new(task[0], task[1],task[2],task[3],task[4],task[5])
     end
 
-    employee_tasks_complete #returns an array
-     #this should return an employee name and return an array of incomplete tasks (id, description, priority_number)
+    employee_tasks_complete
   end
 end
