@@ -90,7 +90,7 @@ module TM
         RETURNING *;
       SQL
 
-      result = @db_adaptor.exec(command).values[0]
+      @db_adaptor.exec(command).values[0]
     end
 
 
@@ -101,9 +101,9 @@ module TM
         WHERE pid = ('#{pid}');
       SQL
 
-      result = @db_adaptor.exec(command).values
+      @db_adaptor.exec(command).values
 
-      result #returns an array of strings of tasks
+      #returns an array of strings of tasks
     end
 
     def mark(tid,pid) #mark a task complete and returns true or false
@@ -151,7 +151,7 @@ module TM
         RETURNING *;
       SQL
 
-      result = @db_adaptor.exec(command).values.first
+      result = @db_adaptor.exec(command).values.first #returns an array of employee info
     end
 
     def list_all_employees
@@ -184,12 +184,9 @@ module TM
       WHERE pe.eid = '#{eid}';
       SQL
 
-      result = @db_adaptor.exec(command).values
-
-      result
+      @db_adaptor.exec(command).values
 
       #returns as an array of project information
-
     end
 
     def show_employees_in_project(pid) #project employees PID' - Show employees participating in this project
@@ -202,7 +199,7 @@ module TM
       SQL
 
       @db_adaptor.exec(command).values
-      #returns an array with info about the employee name(s) and id(s)
+      #returns an array
     end
 
     def assign_task_to_employee(tid,eid) #task assign TID EID' - Assign task to employee
@@ -239,21 +236,20 @@ module TM
       WHERE te.eid = '#{eid}' AND t.complete = true;
       SQL
 
-      @db_adaptor.exec(command).values #returns an array
+      @db_adaptor.exec(command).values
     end
 
-    def delete_task(task_id) #deletes a task
+    def delete_task(tid,pid) #deletes a task
       command = <<-SQL
         DELETE
         FROM tasks
-        WHERE id = ('#{task_id}')
+        WHERE id = ('#{tid}') AND pid = ('#{pid}')
         RETURNING *;
       SQL
 
-      result = @db_adaptor.exec(command).values[0]
+      @db_adaptor.exec(command).values[0]
 
       true
-
     end
 
 ####################################

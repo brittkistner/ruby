@@ -116,6 +116,15 @@ describe 'TM::Project' do
     end
   end
 
+  describe '.delete_task' do
+    it 'deletes a task given a task id and project id and returns true' do
+      project1 = TM::Project.add_project("project1")
+      project1.create_task(5,"task1",1)
+
+      TM::Project.delete_task(1,1)
+    end
+  end
+
 end
 
 

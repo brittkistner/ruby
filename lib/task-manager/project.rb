@@ -101,5 +101,9 @@ class TM::Project
     TM.orm.add_employee_to_project(pid,eid) #returns true
   end
 
+  def self.delete_task(task_id,pid)
+    TM.orm.delete_task(task_id,pid) #returns true
+  end
+
 end
 

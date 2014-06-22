@@ -195,7 +195,7 @@ describe 'ORM' do
 
 
   describe '#employee_incomplete_tasks' do
-    it 'shows incomplete tasks for the employee, along with project name next to task' do
+    xit 'shows incomplete tasks for the employee, along with project name next to task' do
       TM.orm.add_project("code")
 
       TM.orm.create_employee("smith")
@@ -239,4 +239,13 @@ describe 'ORM' do
     end
   end
 
+  describe '#delete_task' do
+    it 'deletes a task given a TID and PID and returns true' do
+      TM.orm.add_project("code")
+
+      TM.orm.create_task(3,"task1",1)
+
+      expect(TM.orm.delete_task(1,1)).to eq(true)
+    end
+  end
 end
