@@ -195,7 +195,7 @@ describe 'ORM' do
 
 
   describe '#employee_incomplete_tasks' do
-    xit 'shows incomplete tasks for the employee, along with project name next to task' do
+    it 'shows incomplete tasks for the employee, along with project name next to task' do
       TM.orm.add_project("code")
 
       TM.orm.create_employee("smith")
@@ -221,11 +221,15 @@ describe 'ORM' do
 
 
   describe '#employee_completed_tasks' do
-    xit 'takes an employee id and shows completed tasks for employees' do
+    it 'takes an employee id and shows completed tasks for employees' do
       TM.orm.add_project("code")
 
+      TM.orm.create_employee("smith")
+
+      TM.orm.add_employee_to_project(1,1)
+
       TM.orm.create_task(3,"task1",1)
-      TM.orm.create_task(3,"task2",2)
+      TM.orm.create_task(3,"task2",1)
       TM.orm.create_task(3,"task3",1)
 
       TM.orm.assign_task_to_employee(1,1)

@@ -7,6 +7,11 @@ class TM::Employee
     @name = name
   end
 
+  def self.get(id)
+    result = TM.orm.get_employee(id)
+    TM::Employee.new(result[0],result[1])
+  end
+
   def self.add_employee(name)
     result = TM.orm.create_employee(name)
     TM::Employee.new(result[0], result[1])
@@ -24,12 +29,12 @@ class TM::Employee
     employees
   end
 
-  def assign_task_to_employee(tid,eid)
+  def assign_task_to_employee(tid)
     TM.orm.assign_task_to_employee(tid,@id) #return true
   end
 
-  def self.show_employee_projects(eid)
-    result = TM.orm.show_employee_projects(eid)
+  def show_employee_projects
+    result = TM.orm.show_employee_projects(@id)
 
     employee_projects = []
 
@@ -42,8 +47,8 @@ class TM::Employee
     #this should return an array of projects for an employee
   end
 
-  def self.incomplete_tasks(eid)
-    result = TM.orm.employee_incomplete_tasks(eid)
+  def incomplete_tasks
+    result = TM.orm.employee_incomplete_tasks(@id)
 
     employee_tasks_incomplete = []
 
@@ -54,8 +59,8 @@ class TM::Employee
     employee_tasks_incomplete #returns an array
   end
 
-  def self.complete_tasks(eid)
-    result = TM.orm.employee_completed_tasks(eid)
+  def complete_tasks
+    result = TM.orm.employee_completed_tasks(@id)
     employee_tasks_complete = []
 
     result.each do |task|

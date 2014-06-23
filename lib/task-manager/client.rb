@@ -11,7 +11,7 @@ class TM::Client
     puts "--Type 'project recruit PID EID' - Adds employee EID to participate in project PID"
     puts "--Type 'task create PID PRIORITY_NUMBER DESCRIPTION' to add a task for project id = PID"
     puts "--Type 'task list PID' to show all tasks for project id = PID"
-    puts "--Type 'task mark TID PID' to mark a task with id =TID as complete"
+    puts "--Type 'task mark TID PID' to mark a task with id = TID as complete"
     puts "--Type 'task assign TID EID' - Assign task to employee"
     puts "--Type 'emp list' - List all employees"
     puts "--Type 'emp create NAME' - Create a new employee"
@@ -89,11 +89,11 @@ class TM::Client
         when 'list'
           self.list_employees
         when 'create'
-          name = Integer(user_input[2])
+          name = user_input[2]
           self.new_employee(name)
         when 'show'
           eid = Integer(user_input[2])
-          self.employee_projects(eid)
+          self.employee_and_projects(eid)
         when 'details'
           eid = Integer(user_input[2])
           self.employee_incomplete_tasks(eid)
@@ -111,7 +111,7 @@ class TM::Client
 
 #Project Methods
   def self.list_projects
-    TM::Projects.list_projects.each do |proj|
+    TM::Project.list_projects.each do |proj|
       puts "\n"
       puts "Project Name: #{proj.name}"
       puts "Project ID: #{proj.id}"
@@ -121,33 +121,34 @@ class TM::Client
 
   def self.new_project(name)
     new_project = TM::Project.add_project(name)
-    puts "Created #{new_project.name} with PID: #{new_project.id}"
+    puts "Created #{new_project.name} with project id: #{new_project.id}"
   end
 
   def self.task_list_for_each_project(pid)
-    TM::Project.retrieve_incomplete_tasks(pid).each do |proj|
+      puts "Incompleted Tasks:"
+      project = TM::Project.get(pid)
+      project.retrieve_incomplete_tasks.each do |task|
       puts "\n"
-      puts "Project Name: #{proj.name}"
-      puts "Project ID: #{proj.id}"
+      puts "task ID: #{task.id}"
+      puts "task ID: #{task.description}"
       puts "\n"
     end
   end
 
   def self.completed_tasks_for_single_project(pid)
-    project = TM::Project.project_list[pid]
-    project.retrieve_completed_tasks
-
-      puts "Completed Tasks:"
-    TM::Project.retrieve_completed_tasks(pid).each do |proj|
+    project = TM::Project.get(pid)
+    puts "Completed Tasks:"
+    project.retrieve_completed_tasks.each do |task|
       puts "\n"
-      puts "Project Name: #{proj.name}"
-      puts "Project ID: #{proj.id}"
+      puts "task ID: #{task.id}"
+      puts "task ID: #{task.description}"
       puts "\n"
     end
   end
 
   def self.show_employees_in_project(pid)
-    employee_list = TM::Project.show_employees_in_project(pid)
+    project = TM::Project.get(pid)
+    employee_list = project.show_employees_in_project
     employee_list.each do |employee|
       puts "\n"
       puts "Employee Name: #{employee.name}"
@@ -157,23 +158,31 @@ class TM::Client
   end
 
   def self.add_employee_to_project(pid,eid)
-    TM::Project.add_employee_to_project(pid,eid)
+    project = TM::Project.get(pid)
+    project.add_employee_to_project(eid)
+    employee = TM::Employee.get(eid)
     puts "\n"
-    puts "Added employee with id: #{eid} to project with pid: #{pid}" #names of project and employee?
+    puts "Added #{employee.name} with id: #{eid} to #{project.name} with pid: #{pid}" #names of project and employee?
     puts "\n"
   end
 
 #Task Methods
 
   def self.create_task(priority_number, description, pid)
-    TM::Project.create_task(priority_number,description,pid)
+    project = TM::Project.get(pid)
+    task = project.create_task(priority_number,description)
     puts "\n"
-    puts "Task #{result.id} created"
+    puts "Task #{task.id} created"
+    puts "Task Priority Number: #{task.priority_number}"
+    puts "Task Description: #{task.description}"
+    puts "Task Description: #{task.creation_date}"
+    puts "Task Description: #{task.project_id}"
     puts "\n"
   end
 
   def self.task_list(pid)
-    task_list = TM::Project.task_list(pid)
+    project = TM::Project.get(pid)
+    task_list = project.task_list
     task_list.each do |task|
       puts "\n"
       puts "Task ID: #{task.id}"
@@ -184,24 +193,27 @@ class TM::Client
   end
 
   def self.mark(tid,pid)
-    TM::Project.project_mark_complete(tid,pid)
+    project = TM::Project.get(pid)
+    task = project.get_task(tid)
+    task.mark_complete
     puts "\n"
     puts "Task ID: #{tid} marked complete"
     puts "\n"
   end
 
   def self.assign_task_to_employee(tid,eid)
-    TM::Employee.assign_task_to_employee(tid,eid)
+    employee = TM::Employee.get(eid)
+    employee.assign_task_to_employee(tid)
     puts "\n"
-    puts "Task ID: #{tid} assigned to employee with id: #{eid}." #use employee name?
+    puts "Task ID: #{tid} assigned to #{employee.name} with id: #{eid}." #use employee name?
     puts "\n"
   end
 
 #Employee Methods
 
   def self.new_employee(name)
-    new_employee = TM::Employee.add_employee(name)
-    puts "Created #{new_employee.name} with EID: #{new_employee.id}"
+    employee = TM::Employee.add_employee(name)
+    puts "Created #{employee.name} with EID: #{employee.id}"
   end
 
   def self.list_employees
@@ -215,7 +227,8 @@ class TM::Client
   end
 
   def self.employee_and_projects(eid)
-    employee_projects = TM::Employee.show_employee_projects(eid)
+    employee = TM::Employee.get(eid)
+    employee_projects = employee.show_employee_projects
     puts "\n"
     puts "Projects for #{employee.name}"
     employee_projects.each do |proj|
@@ -226,9 +239,11 @@ class TM::Client
     end
   end
 
-  def self.employee_incomplete_tasks
-    employee_incomplete_tasks = TM::Employee.incomplete_tasks(eid)
+  def self.employee_incomplete_tasks(eid)
+    employee = TM::Employee.get(eid)
+    employee_incomplete_tasks = employee.incomplete_tasks
     employee_incomplete_tasks.each do |task|
+      puts "Incomplete Tasks"
       puts "\n"
       puts "Task ID: #{task.id}"
       puts "Task Priority Number: #{task.priority_number}"
@@ -237,9 +252,11 @@ class TM::Client
     end
   end
 
-  def self.employee_complete_tasks
-    employee_complete_tasks = TM::Employee.complete_tasks(eid)
+  def self.employee_complete_tasks(eid)
+    employee = TM::Employee.get(eid)
+    employee_complete_tasks = employee.complete_tasks
     employee_complete_tasks.each do |task|
+      puts "Complete Tasks"
       puts "\n"
       puts "Task ID: #{task.id}"
       puts "Task Priority Number: #{task.priority_number}"
@@ -250,5 +267,3 @@ class TM::Client
 
 end
 
-# require_relative 'task-manager/task.rb'
-# require_relative 'task-manager/project.rb'

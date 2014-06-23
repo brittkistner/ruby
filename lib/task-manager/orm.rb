@@ -52,7 +52,7 @@ module TM
         DROP TABLE IF EXISTS tasks CASCADE;
         DROP TABLE IF EXISTS employees CASCADE;
         DROP TABLE IF EXISTS joins_projects_employees CASCADE;
-        DROP TABLE IF EXISTS joins_projects_employees CASCADE;
+        DROP TABLE IF EXISTS joins_tasks_employees CASCADE;
       SQL
 
       @db_adaptor.exec(command)
@@ -63,11 +63,22 @@ module TM
       create_tables
     end
 
+    def get(id) #gets the project we want, make a method in project?
+      command = <<-SQL
+        SELECT id,name
+        FROM projects
+        WHERE id = ('#{id}')
+      SQL
+
+      @db_adaptor.exec(command).values.first
+
+    end
+
     def add_project(name)
       command = <<-SQL
         INSERT INTO projects(name)
         VALUES('#{name}')
-        RETURNING *;
+        RETURNING id,name;
       SQL
       @db_adaptor.exec(command).values.first
     end
@@ -93,7 +104,15 @@ module TM
       @db_adaptor.exec(command).values[0]
     end
 
+    def get_task(id)  #create test
+      command = <<-SQL
+      SELECT *
+      FROM tasks
+      WHERE id = '#{id}';
+      SQL
 
+      @db_adaptor.exec(command).values.first
+    end
 
     def task_list(pid) #lists all tasks for a specific project
       command = <<-SQL
@@ -151,7 +170,18 @@ module TM
         RETURNING *;
       SQL
 
-      result = @db_adaptor.exec(command).values.first #returns an array of employee info
+      @db_adaptor.exec(command).values.first #returns an array of employee info
+    end
+
+    def get_employee(id)
+      command = <<-SQL
+      SELECT id,name
+      FROM employees
+      WHERE id = '#{id}';
+      SQL
+
+      @db_adaptor.exec(command).values.first
+
     end
 
     def list_all_employees
@@ -208,7 +238,19 @@ module TM
       VALUES ('#{tid}', '#{eid}');
       SQL
 
+      @db_adaptor.exec(command)
+
       true
+    end
+
+    def list_employee_tasks(eid)
+      command = <<-SQL
+      SELECT *
+      FROM joins_tasks_employees
+      WHERE eid = '#{eid}';
+      SQL
+
+      @db_adaptor.exec(command).values.first
     end
 
     def employee_incomplete_tasks(eid) #show incomplete tasks for the employee, along with project name next to task
@@ -218,7 +260,7 @@ module TM
       JOIN tasks AS t
       ON te.tid = t.id
       JOIN projects AS p
-      ON t.pid = pid
+      ON t.pid = p.id
       WHERE te.eid = '#{eid}' AND t.complete = false;
       SQL
 
@@ -232,7 +274,7 @@ module TM
       JOIN tasks AS t
       ON te.tid = t.id
       JOIN projects AS p
-      ON t.pid = pid
+      ON t.pid = p.id
       WHERE te.eid = '#{eid}' AND t.complete = true;
       SQL
 
@@ -257,17 +299,7 @@ module TM
 
 
 
-    # def get(id) #gets the project we want, make a method in project?
-    #   command = <<-SQL
-    #     SELECT *
-    #     FROM projects
-    #     WHERE id = ('#{id}')
-    #   SQL
 
-    #   result = @db_adaptor.exec(command).values.first
-
-    #   TM::Project.new(result[0], result[1])
-    # end
 
   end
 

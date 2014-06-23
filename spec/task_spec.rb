@@ -10,25 +10,33 @@ describe 'TM::Task' do
     expect(TM::Task).to be_a(Class)
   end
 
+  describe '.get' do
+    it 'gets the id of a task and creates a new task instance' do
+      project1 = TM::Project.add_project("code")
+      project1.create_task(2, "task1")
+      expect(TM::Task.get(1)).to be_a(TM::Task)
+    end
+  end
+
   describe '#initialize' do
 
     it "has a creation date" do
       project1 = TM::Project.add_project("code")
-      task1 = project1.create_task(2,"task1",1)
+      task1 = project1.create_task(2,"task1")
 
       expect(task1.creation_date).should be_an_instance_of(DateTime)
     end
 
     it "has a priority number" do
       project1 = TM::Project.add_project("code")
-      task1 = project1.create_task(2,"task1",1)
+      task1 = project1.create_task(2,"task1")
 
       expect(task1.priority_number).to eq(2)
     end
 
     it "complete is false" do
       project1 = TM::Project.add_project("code")
-      task1 = project1.create_task(2,"task1",1)
+      task1 = project1.create_task(2,"task1")
 
       expect(task1.complete).to eq(false)
     end
@@ -38,7 +46,7 @@ describe 'TM::Task' do
   describe "#mark_complete" do
     it "will mark a task as complete" do
       project1 = TM::Project.add_project("code")
-      task1 = project1.create_task(2,"task1",1)
+      task1 = project1.create_task(2,"task1")
 
       expect(task1.mark_complete).to eq(true)
     end

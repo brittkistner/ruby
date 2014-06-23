@@ -6,6 +6,13 @@ describe 'TM::Employee' do
     expect(TM::Employee).to be_a(Class)
   end
 
+  describe '.get' do
+    it 'gets the id of an employee and creates a new Employee instance' do
+      TM::Employee.add_employee('Suzie')
+      expect(TM::Employee.get(1)).to be_a(TM::Employee)
+    end
+  end
+
   describe '#initialize' do
 
     it 'has a name and id' do
@@ -17,6 +24,7 @@ describe 'TM::Employee' do
 
   describe '.add_employee' do
     it 'creates an employee and returns an Employee instance' do
+      binding.pry
       expect(TM::Employee.add_employee("smith")).to be_a(TM::Employee)
     end
   end
@@ -24,9 +32,9 @@ describe 'TM::Employee' do
 
   describe '.list_employees' do
     it 'lists all employees and returns an array of Employee instances' do
-      employee1 = TM::Employee.add_employee("smith")
-      employee1 = TM::Employee.add_employee("darwin")
-      employee1 = TM::Employee.add_employee("fred")
+      TM::Employee.add_employee("smith")
+      TM::Employee.add_employee("darwin")
+      TM::Employee.add_employee("fred")
 
       expect(TM::Employee.list_employees).to be_a(Array)
       expect(TM::Employee.list_employees[0]).to be_a(TM::Employee)
@@ -39,9 +47,9 @@ describe 'TM::Employee' do
       employee1 = TM::Employee.add_employee("smith")
       project1 = TM::Project.add_project("project1")
 
-      project1.create_task(2,"task1",1)
+      project1.create_task(2,"task1")
 
-      expect(employee1.assign_task_to_employee(1,1)).to eq(true)
+      expect(employee1.assign_task_to_employee(1)).to eq(true)
     end
   end
 
@@ -49,55 +57,55 @@ describe 'TM::Employee' do
     it 'returns an array of all projects an employee with EID is working on' do
     #this should return an employee name and return an array of projects (and id) for all employee projects
       project1 = TM::Project.add_project("code")
-      project1 = TM::Project.add_project("homework")
+      project2 = TM::Project.add_project("homework")
 
-      TM::Employee.add_employee("smith")
-      TM::Project.add_employee_to_project(1,1)
-      TM::Project.add_employee_to_project(2,1)
+      employee = TM::Employee.add_employee("smith")
+      project1.add_employee_to_project(1)
+      project2.add_employee_to_project(1)
 
-      expect(TM::Employee.show_employee_projects(1).map{|project| project.name}).to include("code","homework")
-      expect(TM::Employee.show_employee_projects(1)[0]).to be_a(TM::Project)
+      expect(employee.show_employee_projects.map{|project| project.name}).to include("code","homework")
+      expect(employee.show_employee_projects[0]).to be_a(TM::Project)
     end
   end
 
-  describe '.incomplete_tasks' do
-    xit 'shows all incomplete tasks for employee with an EID and returns an array of incompleted tasks' do
-      employee1 = TM::Employee.add_employee("smith")
+  describe '#incomplete_tasks' do
+    it 'shows all incomplete tasks for employee with an EID and returns an array of incompleted tasks' do
+      employee = TM::Employee.add_employee("smith")
 
       project1 = TM::Project.add_project("project1")
 
-      project1.create_task(2,"task1",1)
-      project1.create_task(4,"task2",1)
+      project1.create_task(2,"task1")
+      project1.create_task(4,"task2")
 
-      employee1.assign_task_to_employee(1,1)
-      employee1.assign_task_to_employee(2,1)
+      employee.assign_task_to_employee(1)
+      employee.assign_task_to_employee(2)
 
-      expect(employee1.incomplete_tasks(1)).to be_a(Array)
-      expect(employee1.incomplete_tasks(1)[0]).to be_a(TM::Task)
-      expect(employee1.incomplete_tasks(1).size).to eq(2)
+      expect(employee.incomplete_tasks).to be_a(Array)
+      expect(employee.incomplete_tasks[0]).to be_a(TM::Task)
+      expect(employee.incomplete_tasks.size).to eq(2)
     end
   end
 
-  describe '.complete_tasks' do
-    xit 'shows all complete tasks for employee with an EID and returns an array of completed tasks' do
-      employee1 = TM::Employee.add_employee("smith")
+  describe '#complete_tasks' do
+    it 'shows all complete tasks for employee with an EID and returns an array of completed tasks' do
+      employee = TM::Employee.add_employee("smith")
 
       project1 = TM::Project.add_project("project1")
 
-      project1.create_task(2,"task1",1)
-      project1.create_task(4,"task2",1)
-      project1.create_task(1,"task3",1)
+      task1 = project1.create_task(2,"task1")
+      task2 = project1.create_task(4,"task2")
+      project1.create_task(1,"task3")
 
-      employee1.assign_task_to_employee(1,1)
-      employee1.assign_task_to_employee(2,1)
-      employee1.assign_task_to_employee(3,1)
+      employee.assign_task_to_employee(1)
+      employee.assign_task_to_employee(2)
+      employee.assign_task_to_employee(3)
 
-      project1.project_mark_complete(1,1)
-      project1.project_mark_complete(2,1)
+      task1.mark_complete
+      task2.mark_complete
 
-      expect(TM::Employee.complete_tasks(1)).to be_a(Array)
-      expect(TM::Employee.complete_tasks(1)[0]).to be_a(TM::Task)
-      expect(TM::Employee.complete_tasks(1).size).to eq(2)
+      expect(employee.complete_tasks).to be_a(Array)
+      expect(employee.complete_tasks[0]).to be_a(TM::Task)
+      expect(employee.complete_tasks.size).to eq(2)
     end
   end
 end
