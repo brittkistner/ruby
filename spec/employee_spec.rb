@@ -24,7 +24,6 @@ describe 'TM::Employee' do
 
   describe '.add_employee' do
     it 'creates an employee and returns an Employee instance' do
-      binding.pry
       expect(TM::Employee.add_employee("smith")).to be_a(TM::Employee)
     end
   end

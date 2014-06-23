@@ -40,16 +40,13 @@ describe 'ORM' do
     end
   end
 
-  # describe '#get' do
-  #   xit 'lists a single project by project_id and returns as Project instance' do
-  #     TM.orm.add_project("code")
+  describe '#get' do
+    it 'retrieves a project by project id and returns the project information' do
+      TM.orm.add_project("code")
 
-  #     project1 = TM.orm.get(1)
-
-  #     expect(project1).to be_a(TM::Project)
-  #     expect(project1.name).to eq("code")
-  #   end
-  # end
+      expect(TM.orm.get(1)).to be_a(Array)
+    end
+  end
 
   describe '#create_task' do
     it 'creates a task and adds to the database' do
@@ -60,16 +57,14 @@ describe 'ORM' do
     end
   end
 
-  # describe '#delete_task'do
-  #   xit 'deletes a task by task_id' do
-  #     project1 = TM.orm.add_project("code")
-  #     TM.orm.create_task(3,"task1",1)
+  describe '#delete_task'do
+    it 'deletes a task by task_id' do
+      TM.orm.add_project("code")
+      TM.orm.create_task(3,"task1",1)
 
-  #     expect(TM.orm.delete_task(1)).to be_a(TM::Task)
-
-  #     # expect(TM.orm.delete_task(1).complete).to eq("f")
-  #   end
-  # end
+      expect(TM.orm.delete_task(1,1)).to eq(true)
+    end
+  end
 
   describe '#task_list' do
     it 'lists all the tasks in the database' do
@@ -128,6 +123,12 @@ describe 'ORM' do
     end
   end
 
+  describe '#get_employee' do
+    it 'retrieves an employee by id and returns the employee information' do
+      TM.orm.create_employee("smith")
+      expect(TM.orm.get_employee(1)).to be_a(Array)
+  end
+
   describe '#list_all_employees' do
     it 'lists all the employees in the database and returns an array with the employee information' do
       employee = TM.orm.create_employee("smith")
@@ -170,7 +171,7 @@ describe 'ORM' do
       TM.orm.create_employee("ben")
       TM.orm.create_employee("wahoo")
 
-      TM.orm.add_employee_to_project(1,1) #pid,eid
+      TM.orm.add_employee_to_project(1,1)
       TM.orm.add_employee_to_project(1,2)
       TM.orm.add_employee_to_project(1,3)
 
@@ -212,8 +213,6 @@ describe 'ORM' do
 
       TM.orm.mark(1,1)
 
-      # binding.pry
-
       expect(TM.orm.employee_incomplete_tasks(1)).to be_a(Array)
       expect(TM.orm.employee_incomplete_tasks(1).size).to eq(2)
     end
@@ -252,4 +251,6 @@ describe 'ORM' do
       expect(TM.orm.delete_task(1,1)).to eq(true)
     end
   end
+
+end
 end
